@@ -30,6 +30,16 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Resolve dependencies
+      run: mvn dependency:resolve
+
     - name: trivy installation
       run: |
         sudo apt-get install wget gnupg
@@ -37,8 +47,9 @@ jobs:
         echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
         sudo apt-get update
         sudo apt-get install trivy -y
+
     - name: trivy fs-scan
-      run: trivy fs --format json --output trivy-report.json .
+      run: trivy fs . --offline-scan --scanners vuln --format json -o fs-report.json
         
     - name: Gitleack installation
       run: sudo apt-get install gitleaks -y
