@@ -86,7 +86,7 @@ jobs:
         cache: maven
     - name: build project
       run: mvn package
-      - uses: actions/checkout@v6
+    - uses: actions/checkout@v6
       with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
         fetch-depth: 0
@@ -96,10 +96,10 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        with:
+      id: sonarqube-quality-gate-check
+      uses: sonarsource/sonarqube-quality-gate-action@master
+      with:
           pollingTimeoutSec: 600
-        env:
+      env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} #OPTIONAL    
